@@ -27,7 +27,7 @@ struct Human
     char name[50];
     int blood;
     int power;
-    int glad;
+    int gold;
     int skill;
 }Player;
 struct Human123{
