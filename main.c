@@ -27,7 +27,7 @@ struct Human
     char name[50];
     int blood;
     int power;
-    int gold;
+    int glad;
     int skill;
 }Player;
 struct Human123{
@@ -85,6 +85,7 @@ int Game_Pause(){
     printf("(按Esc键退出游戏，按其他键取消)\n");
     if (getch()==KEY_Esc){
         //保存当前关卡人物信息
+        Data_File_Update();
         exit(0);
     }
 
@@ -101,7 +102,7 @@ int Event_Response(){
                 case 'A':case 'a':Human_Move(0,-2);break;
                 case 'D':case 'd':Human_Move(0,2);break;
                 
-                case 'F':case 'f':Human_Fight();break; //c语言函数默认参数
+                case 'F':case 'f':Human_Fight();break;//C语言怎么写默认函数
                 case 'Q':case 'q':Human_Fight(Player.skill);break;
 
                 case 'E':case 'e':Human_Change_Prop();break;
@@ -112,16 +113,55 @@ int Event_Response(){
         }
 }
 
+int Prop_Pick(){
+    //道具拾取
+}
+int Partner_Follow(){
+    //随从跟随
+}
+int Part_Fight(){
+    //随从攻击
+}
+int Monster_Build(){
+    //怪物生成
+}
+int Monster_Follow(){
+    //怪物跟随
+}
+int Monster_Fight(){
+    //怪物攻击
+}
 int Normal_Operation(){
 
 }
-
-int Draw_Render_Interface(){
+int Draw_Set_Monster(){
 
 }
-int Draw_Set_Background();{
+int Draw_Set_Human(){
+
+int Draw_Set_Weapon(){
+
+}
+int Draw_Set_Prop_Redorp(){
+
+}
+int Draw_Set_Bullet(){
+
+}
+int Draw_Set_Grass(){
+
+}
+int Draw_Set_Prop_Name(){
+
+}
+int Draw_Render_Interface(){
+    //整体界面渲染
+}
+
+int Draw_Set_Background(){
     Back_Ground = Back_Ground_Array[Level];
 }
+
 int Render_Interface(){
     Draw_Set_Background();
     Draw_Set_Monster();
@@ -147,7 +187,33 @@ int Draw_Title(int level){
     //从title列表中打印当前关卡名称
     //睡眠一定时间
 }
+int Data_Encrypy(){
+    //数据加密
+}
+int Data_Decode(){
+    //数据解密
+}
 
+int Data_Comparison(){
+    //数据对比
+}
+int Data_File_Check(){
+
+}
+int Data_File_New(){
+
+}
+int Data_File_Read(){
+
+}
+int Data_File_Update(){
+
+}
+int Game_Initialization(){
+    if (Data_File_Check())
+        Data_File_New();
+    Data_File_Read();
+}
 int Game_Begin(){
     Draw_Tips(COVER);
     Draw_Story(Level);
@@ -169,7 +235,7 @@ int main(){
     while (1){
         Set_Background(Level);
         if (Level>LEVEL) break;
-        while (1){
+        while (1){ 
             Event_Response();
             //事件响应
             Normal_Operation();
