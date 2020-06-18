@@ -135,24 +135,27 @@ int Normal_Operation(){
 
 }
 int Draw_Set_Monster(){
-
+    //根据怪物位置放入怪物模型
+}
+int Darw_Set_Partner(){
+        //根据随从位置放入随从模型
 }
 int Draw_Set_Human(){
-
+    //根据人物位置放入人物模型
 int Draw_Set_Weapon(){
-
+    //根据人物位置和方向将武器放入画面
 }
 int Draw_Set_Prop_Redorp(){
-
+    //根据掉落物品位置和属性将未拾取道具放入画面
 }
 int Draw_Set_Bullet(){
-
+    //将子弹绘入画面
 }
 int Draw_Set_Grass(){
-
+    //绘入草丛
 }
 int Draw_Set_Prop_Name(){
-
+    //实时显示道具名称
 }
 int Draw_Render_Interface(){
     //整体界面渲染
@@ -175,7 +178,8 @@ int Render_Interface(){
     Draw_Render_Interface();
 }
 
-int Draw_Story(int level){
+int Draw_Story(int level){//talk()
+    //在剧情框绘入人物对话
     for(int i=0;i<Story_Count[level];i++){
         printf("%s\n",Story[i]);
         system("pause");
@@ -198,16 +202,16 @@ int Data_Comparison(){
     //数据对比
 }
 int Data_File_Check(){
-
+    //数据文件检测
 }
 int Data_File_New(){
-
+    //新建数据文件
 }
 int Data_File_Read(){
-
+    //读取数据文件
 }
 int Data_File_Update(){
-
+    //数据文件更新
 }
 int Game_Initialization(){
     if (Data_File_Check())
@@ -215,6 +219,7 @@ int Game_Initialization(){
     Data_File_Read();
 }
 int Game_Begin(){
+    //播放开始动画
     Draw_Tips(COVER);
     Draw_Story(Level);
     printf("尊敬的勇士，请告诉我你的名字：");
@@ -223,6 +228,7 @@ int Game_Begin(){
 }
 
 int Game_Finish(){
+    //播放结束动画
     Draw_Story(Level);
     //Draw_Story(制作组，特别鸣谢，友情赞助，剧情来源，地图设计，交互设计，游戏策划，美工，项目总监，版权，联系方式)
 }
