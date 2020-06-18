@@ -1,0 +1,168 @@
+#include "stdio.h"
+#include "conio.h"
+#include "stdlib.h"
+#include "windows.h"
+
+#define LEVEL 13
+#define COVER 0
+#define Y_STEP 1
+#define X_STEP 2
+#define KEY_Esc 0x1b
+#define HIGH
+#define WIDE
+
+int Level=-1;
+char Order = 'd';
+char Map_Logic[HIGH][WIDE]={""};
+char Map_Draw[HIGH][WIDE] = {""};
+Monster_Coord[9][2] = {0};//第一维表示某波的怪物数量，第二维表示怪物坐标
+
+int Coord_Human_Y = 18, Coord_Human_X = 3; //定义人物初始位置
+char *Coord_Human_Body[WIDE];
+Coord_Human_Body = Map_Draw;
+
+struct Human
+{
+    int job;
+    char name[50];
+    int blood;
+    int power;
+    int glad;
+    int skill;
+}Player;
+
+struct Monster
+{
+    int id;
+    char name[50];
+    int blood;
+    int harm;
+};
+
+int Coord_Human_Body_Offset(int x,int y){
+    //人物身体位置的相对偏移量
+    return *(*(Coord_Human_Body+Coord_Human_Y + y ) + Coord_Human_X + x);
+}
+
+int Human_Move(int x,int y){
+    //if  这里是用来判断是否撞墙
+    if  (Coord_Human_Body_Offset(x, y)!='#'){
+        Coord_Human_Y += y;
+        Coord_Human_X += x;
+    }
+}
+
+int Human_Fight(){
+
+}
+
+int Event_Response(){
+    if(kbhit()){
+        switch(Order=getch()){
+            case 'W':case 'w':Human_Move(-1,0);break;
+            case 'S':case 's':Human_Move(1,0);break;
+            case 'A':case 'a':Human_Move(0,-2);break;
+            case 'D':case 'd':Human_Move(0,2);break; 
+            case 'F':case 'f':Human_Fight();break;//C语言不能直接写默认函数
+        }
+    }
+}
+int Mode_Crash(int ax, int ay, int asize, int bx, int by, int bsize){
+    //判断两个物体的模型是否发生碰撞
+    //返回值为 1||0
+}
+int Monster_Build(int count){
+    //怪物生成
+    //参数为怪物的种类和个数
+    //重点注意像素变化
+    //下次更改写成宏定义
+
+    int x, y, i;
+    for (i = 0; i < count;i++){
+        x = rand() % WIDE + 5;
+        y = rand() % HIGH;
+        if (Map_Logic[y][x]!='#'&& Mode_Crash(Coord_Human_X,Coord_Human_Y,1,x,y,0)){
+        
+            Monster_Coord[i][0] = x;
+            Monster_Coord[i][1] = y;
+        }
+    }
+}
+int Draw_Set_Monster(int count){
+    //根据怪物位置放入怪物模型
+    int i;
+    for (i = 0; i < count;i++){
+        Map_Draw[Monster_Coord[i][1]][Monster_Coord[i][0]]='@'
+    }
+}
+int Draw_Set_Human(){
+    //根据人物位置放入人物模型
+    char strhead = 'O', strbody = 'H', strrarm = '>', strlarm = '<',  strleg = 'I', strdick = ' ';
+    *(*(Coord_Human_Body+Coord_Human_Y - 1 ) + Coord_Human_X     ) = strhead;
+    *(*(Coord_Human_Body+Coord_Human_Y     ) + Coord_Human_X     ) = strbody;
+    *(*(Coord_Human_Body+Coord_Human_Y     ) + Coord_Human_X + 1 ) = strrarm;
+    *(*(Coord_Human_Body+Coord_Human_Y     ) + Coord_Human_X - 1 ) = strlarm;
+    *(*(Coord_Human_Body+Coord_Human_Y + 1 ) + Coord_Human_X - 1 ) = strleg;
+    *(*(Coord_Human_Body+Coord_Human_Y + 1 ) + Coord_Human_X + 1 ) = strleg;
+    *(*(Coord_Human_Body+Coord_Human_Y + 1 ) + Coord_Human_X     ) = strdick;
+}
+int Draw_Set_Weapon(){
+    //根据人物位置和方向将武器放入画面
+    char strweapon = '!'
+    switch (Order)
+    {
+        case 'W':
+        case 'w':
+        case 'A':
+        case 'a':*(*(Coord_Human_Body+Coord_Human_Y) + Coord_Human_X - 1 ) = strweapon;
+            break;
+        case 'S':
+        case 's':
+        case 'D':
+        case 'd':*(*(Coord_Human_Body+Coord_Human_Y) + Coord_Human_X + 1 ) = strweapon;
+            break;
+    
+        default:
+            break;
+    }
+}
+int Draw_Set_Bullet(){
+    //将子弹绘入画面
+}
+int Draw_Render_Interface(){
+    //整体界面渲染
+    int i, j;
+    for (i = 0; i < HIGH;i++){
+        for (j = 0; j < WIDE;j++){
+            printf("");
+            //是否可以直接打印字符串？
+            //写一个例子验证一下
+        }
+    }
+}
+int Render_Interface(){
+    Draw_Set_Background();
+    Draw_Set_Monster();
+    Draw_Set_Human();
+    Draw_Set_Weapon();
+    //Draw_Set_Prop_Redorp();
+    Draw_Set_Bullet();
+    //Draw_Set_Grass();
+    //Draw_Set_Prop_Name();
+
+    Draw_Render_Interface();
+}
+
+int main(){
+    system("mode con cols=160 lines=36");
+    srand((unsigned)malloc(1));//生成随机数种子
+    //预设控制台窗口大小
+    while (1){ 
+        Event_Response();
+        //事件响应
+        Normal_Operation();
+        //常规处理
+        Render_Interface();
+        //界面渲染
+        }
+}
