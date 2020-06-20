@@ -8,13 +8,14 @@
 #define Y_STEP 1
 #define X_STEP 2
 #define KEY_Esc 0x1b
-#define HIGH
-#define WIDE
+#define HIGH 36
+#define WIDE 160
 
 int Level=-1;
 char Order = 'd';
-char Map_Logic[HIGH][WIDE]={""};
-char Map_Draw[HIGH][WIDE] = {""};
+char Map[HIGH][WIDE]={""};
+// char Map_Logic[HIGH][WIDE] = {""};
+//char Map_Draw[HIGH][WIDE] = {""};
 Monster_Coord[9][2] = {0};//第一维表示某波的怪物数量，第二维表示怪物坐标
 
 int Coord_Human_Y = 18, Coord_Human_X = 3; //定义人物初始位置
@@ -46,14 +47,24 @@ int Coord_Human_Body_Offset(int x,int y){
 
 int Human_Move(int x,int y){
     //if  这里是用来判断是否撞墙
-    if  (Coord_Human_Body_Offset(x, y)!='#'){
+    if  (Coord_Human_Body_Offset(x+1, y)!='#' && Coord_Human_Body_Offset(x-1, y)!='#'){
         Coord_Human_Y += y;
         Coord_Human_X += x;
     }
 }
 
-int Human_Fight(){
 
+int Human_Fight(){
+    //判断攻击线程是否被占用
+    //攻击后切换为下一个攻击线程
+    //根据人物方向判断偏移方向
+    //根据玩家按下攻击操作设置偏移原始位置
+    //根据初始位置和偏移方向和武器种类和当前帧数确定攻击范围
+    //判定攻击范围内是否攻击到怪物模型
+    //根据武器伤害值给碰到的怪物减血
+    //
+    //恢复攻击值
+    
 }
 
 int Event_Response(){
@@ -67,9 +78,15 @@ int Event_Response(){
         }
     }
 }
-int Mode_Crash(int ax, int ay, int asize, int bx, int by, int bsize){
+int Mode_Crash(int ax, int ay,int ah, int aw,int bx, int by, int bh, int bw){
     //判断两个物体的模型是否发生碰撞
     //返回值为 1||0
+    if (abs(ax-bx)>aw+bw||abs(ay-by)>ah+bh)
+        return 0;
+    else if (abs(ax-bx)==aw+bw||abs(ay-by)==ah+bh)
+        return 1;
+    else
+        return -1;
 }
 int Monster_Build(int count){
     //怪物生成
@@ -88,6 +105,9 @@ int Monster_Build(int count){
         }
     }
 }
+
+//更新怪物列表
+
 int Draw_Set_Monster(int count){
     //根据怪物位置放入怪物模型
     int i;
@@ -108,7 +128,7 @@ int Draw_Set_Human(){
 }
 int Draw_Set_Weapon(){
     //根据人物位置和方向将武器放入画面
-    char strweapon = '!'
+    char strweapon = '!';
     switch (Order)
     {
         case 'W':
@@ -129,6 +149,9 @@ int Draw_Set_Weapon(){
 int Draw_Set_Bullet(){
     //将子弹绘入画面
 }
+int Draw_Human_Count(){
+    //实时显示人物剩余攻击次数
+}
 int Draw_Render_Interface(){
     //整体界面渲染
     int i, j;
@@ -141,7 +164,10 @@ int Draw_Render_Interface(){
     }
 }
 int Render_Interface(){
-    Draw_Set_Background();
+    Draw_Set_Background();  //所有的墙必须出现在偶数位置
+    //横坐标必须是 6,12,18,24,30  
+    //纵坐标必须是n*10，n*10+1的倍数 
+    //每两堵墙之间可以跨三步
     Draw_Set_Monster();
     Draw_Set_Human();
     Draw_Set_Weapon();
