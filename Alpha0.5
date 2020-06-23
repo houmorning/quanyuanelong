@@ -8,7 +8,7 @@
 #define Y_STEP 1
 #define X_STEP 2
 #define KEY_Esc 0x1b
-#define HIGH 36
+#define HIGH 37
 #define WIDE 160
 
 int Level=-1;
@@ -30,17 +30,39 @@ struct Human
     int power;
     int glad;
     int skill;
+    int weapon_id;
 }Player;
 
 struct Monster
 {
     int id;
-    char name[50];
+    char name[100];
     int blood;
     int harm;
 };
 
-int Coord_Human_Body_Offset(int x,int y){
+struct Weapon  //此处所有的gan都是抽象  //实际代表的可能是magic  //也可能是大刀片子
+{
+    int id;  //武器ID
+    int type;  //武器类型  //这部分暂时还没有讨论清楚
+    char name[100];  //武器的名称
+    int clip;  //武器弹夹  //武器蓄能满格时能发动攻击的次数
+    int barrel;  //武器枪管  //表示每次攻击能飞出的子弹数量
+    int time;  //该武器子弹飞行的帧数
+    int pierce;  //布尔类型  //表示这种武器攻击时是否能够穿透怪物  //是否会被怪物阻挡
+
+}Chopper;  //这个词是大刀片子的意思  //是我现查的
+
+
+//下面这三个数组用于描述子弹  //还没有编排好合理的代码位置  //后续版本会进行修改
+Ammo_Count[Chopper.clip] = {0};  //0为可用, !0为占用  //存入攻击时【武器】初始位置指针
+Bullet_Location[Chopper.barrel][2] = {0}; //B_L[i][0], B_L[i][0]分别为每颗子弹初始位置
+Bullet_Exist_Famer_Numbers[Chopper.time][2] = {0};  //BEFN[i][0], BEFN[i][0]分别为每颗子弹每帧与【武器】初始位置的偏移量
+//BEFN可以用来找到每帧各子弹绝对位置
+//可以考虑新数组存放这些数据, 在渲染中复用
+
+int Coord_Human_Body_Offset(int x, int y)  //可以改为其他指针通用的相对偏移量  //下个版本考虑修改
+{
     //人物身体位置的相对偏移量
     return *(*(Coord_Human_Body+Coord_Human_Y + y ) + Coord_Human_X + x);
 }
@@ -55,15 +77,34 @@ int Human_Move(int x,int y){
 
 
 int Human_Fight(){
-    //判断攻击线程是否被占用
-    //攻击后切换为下一个攻击线程
+    //判断攻击线程是否被占用                                  //get
+    //攻击后切换为下一个攻击线程                              //get
     //根据人物方向判断偏移方向
-    //根据玩家按下攻击操作设置偏移原始位置
+    //根据玩家按下攻击操作设置偏移原始位置                     //get
     //根据初始位置和偏移方向和武器种类和当前帧数确定攻击范围
     //判定攻击范围内是否攻击到怪物模型
-    //根据武器伤害值给碰到的怪物减血
+    //判定攻击范围是否攻击到墙
+    //碰到墙后子弹阻碍
+    //根据武器伤害值给碰到的怪物减血  //可以考虑传出数据在  正常处理中判断是否攻击到怪物
     //
-    //恢复攻击值
+    //恢复攻击值                                             
+
+    switch(Order)
+    {
+        case 'd':
+            *(*(p + bl[i][1]) + bl[i][0]);
+            break;
+        case 'a':
+            *(*(p - bl[i][1]) - bl[i][0]);
+            break;
+        case 's':
+            *(*(p + bl[i][0]) + bl[i][1]);
+            break;
+        case 'w':
+            *(*(p - bl[i][0]) - bl[i][1]);
+            break;
+    }
+    
     
 }
 
